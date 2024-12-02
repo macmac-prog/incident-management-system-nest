@@ -1,0 +1,31 @@
+API ENDPOINT FOR INCIDENT MANAGEMENT SYSTEM
+
+ENV SETUP
+NEXT_PUBLIC_API_BASE_URL=http://136.239.196.178:5004/api/v1
+
+REGISTER ACCOUNT API
+
+POST
+/auth/register
+Request {
+    firstName,
+    lastName
+    middleName,
+    address,
+    phoneNumber,
+    password,
+    confirmPassword
+}
+
+
+LOGIN AUTHENTICATION API
+
+POST
+/auth/login
+Request {
+    usernameOrEmail,
+    password
+}
+
+
+

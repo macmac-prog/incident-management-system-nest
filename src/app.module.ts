@@ -6,9 +6,10 @@ import { RolesGuard } from './common/guards/roles.guard';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule],
+  imports: [AuthModule, UsersModule, PrismaModule, ConfigModule.forRoot()],
   controllers: [AppController],
   providers: [
     AppService,
