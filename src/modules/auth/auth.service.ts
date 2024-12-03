@@ -37,7 +37,7 @@ export class AuthService {
   }
 
   private generateRememberToken() {
-    return require('bcrypt').randomBytes(32).toString('hex');
+    return require('crypto').randomBytes(32).toString('hex');
   }
 
   async login(user: any, rememberToken: string) {
@@ -60,7 +60,7 @@ export class AuthService {
     }
 
     const accessToken = this.jwtService.sign({ ...payload, rememberToken });
-    
+
     return { accessToken, rememberToken };
   }
 

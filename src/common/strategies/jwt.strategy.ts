@@ -12,7 +12,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('JWT_SECRET_KEY'),
     });
+    console.log(configService);
   }
+
 
   async validate(payload: any) {
     const user = await this.usersService.findById(payload.sub);
