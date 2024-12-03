@@ -32,7 +32,7 @@ model UserLogin {
   id            Int              @id @default(autoincrement())
   username      String           @unique
   password      String
-  rememberToken String
+  rememberToken String?
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
   user          UserDetail?
