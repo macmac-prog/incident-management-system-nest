@@ -35,7 +35,7 @@ export class AuthController {
 
     const { accessToken, rememberToken } = await this.authService.login(
       user,
-      LoginDto.rememberToken,
+      LoginDto.rememberToken || null,
     );
 
     throw new HttpException(

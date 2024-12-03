@@ -3,7 +3,7 @@ import { PrismaService } from '../../modules/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CreateUserDetailsDto } from './dto/create-userDetails.dto';
 import * as bcrypt from 'bcrypt';
-import { UserLogin } from '@prisma/client';
+import { UserLogin, Role, UserRoles } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -26,24 +26,37 @@ export class UsersService {
     const user = await this.prisma.$transaction(async (prisma) => {
       const hashedPassword = await this.hashPassword(createUserDto.password);
 
-      
-      const { username, password, rememberToken, confirmPassword, ...userDetailsData } =
-        createUserDto;
+      const {
+        username,
+        password,
+        rememberToken,
+        confirmPassword,
+        ...userDetailsData
+      } = createUserDto;
+
+      const userRole = await prisma.role.findFirst({
+        where: { name: UserRoles.USER },
+      });
 
       // Create the UserLogin record
       const userLogin = await prisma.userLogin.create({
         data: {
           username: username,
           password: hashedPassword,
+          roles: {
+            connect: {
+              id: userRole.id,
+            },
+          },
           user: {
             create: {
-              ...userDetailsData
-            }
-          }
+              ...userDetailsData,
+            },
+          },
         },
       });
 
-      return userLogin;
+      return { userLogin };
     });
 
     return user;
@@ -56,6 +69,7 @@ export class UsersService {
       },
       include: {
         user: true,
+        roles: true,
       },
     });
   }

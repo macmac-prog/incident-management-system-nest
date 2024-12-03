@@ -10,7 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { IsUnique } from './common/pipes/is-unique.validator';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule, ConfigModule.forRoot()],
+  imports: [ConfigModule.forRoot(), AuthModule, UsersModule, PrismaModule],
   controllers: [AppController],
   providers: [
     AppService,
