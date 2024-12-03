@@ -15,7 +15,9 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { CreateUserDetailsDto } from '../users/dto/create-userDetails.dto';
 import { AuthUser } from '../../common/decorators/auth-user.decorator';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -24,6 +26,8 @@ export class AuthController {
     private authService: AuthService,
   ) {}
 
+  @SkipThrottle({ default: false })
+  @Throttle({ default: { limit: 2, ttl: 10000 } })
   @Post('login')
   async login(@Body() LoginDto: LoginDto) {
     const user = await this.authService.validateUser(LoginDto);

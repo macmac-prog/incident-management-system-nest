@@ -26,8 +26,6 @@ export class UsersService {
 
   async createUserData(createUserDto: CreateUserDto): Promise<any> {
     const user = await this.prisma.$transaction(async (prisma) => {
-      const hashedPassword = await this.hashPassword(createUserDto.password);
-
       const {
         username,
         password,
@@ -36,11 +34,13 @@ export class UsersService {
         ...userDetailsData
       } = createUserDto;
 
+      const hashedPassword = await this.hashPassword(password);
+
       const userRole = await prisma.role.findFirst({
         where: { name: UserRoles.USER },
       });
 
-      // Create the UserLogin record
+      // Create the UserLogin and UserDetail record
       const userLogin = await prisma.userLogin.create({
         data: {
           username: username,

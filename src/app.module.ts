@@ -10,9 +10,23 @@ import { ConfigModule } from '@nestjs/config';
 import { IsUnique } from './common/pipes/is-unique.validator';
 import { CategoryModule } from './modules/category/category.module';
 import { IncidentReportsModule } from './modules/incident-reports/incident-reports.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, UsersModule, PrismaModule, CategoryModule, IncidentReportsModule],
+  imports: [
+    ConfigModule.forRoot(),
+    AuthModule,
+    UsersModule,
+    PrismaModule,
+    CategoryModule,
+    IncidentReportsModule,
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 5,
+      },
+    ]),
+  ],
   controllers: [AppController],
   providers: [
     AppService,
@@ -21,6 +35,10 @@ import { IncidentReportsModule } from './modules/incident-reports/incident-repor
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    }
   ],
 })
 export class AppModule {}

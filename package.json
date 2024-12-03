@@ -31,6 +31,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.4.12",
     "@nestjs/platform-fastify": "^10.4.12",
+    "@nestjs/throttler": "^6.2.1",
     "@prisma/client": "6.0.1",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
