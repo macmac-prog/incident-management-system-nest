@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UsersService } from '../users/users.service';
@@ -11,6 +13,8 @@ import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { CreateUserDetailsDto } from '../users/dto/create-userDetails.dto';
+import { AuthUser } from '../../common/decorators/auth-user.decorator';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 
 @SkipThrottle()
@@ -57,5 +61,17 @@ export class AuthController {
     const { userLogin, userDetail } =
       await this.usersService.createUserData(createUserDto);
     return { userLogin, userDetail };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getProfile(@AuthUser() user: any) {
+    throw new HttpException(
+      {
+        message: 'Profile fetched successfully',
+        loginDetails: user,
+      },
+      HttpStatus.OK,
+    );
   }
 }

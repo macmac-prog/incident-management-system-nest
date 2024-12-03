@@ -8,6 +8,8 @@ import { UsersModule } from './modules/users/users.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { IsUnique } from './common/pipes/is-unique.validator';
+import { CategoryModule } from './modules/category/category.module';
+import { IncidentReportsModule } from './modules/incident-reports/incident-reports.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
@@ -16,6 +18,8 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     AuthModule,
     UsersModule,
     PrismaModule,
+    CategoryModule,
+    IncidentReportsModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,

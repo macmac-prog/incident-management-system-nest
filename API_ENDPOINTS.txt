@@ -8,6 +8,8 @@ REGISTER ACCOUNT API
 POST
 /auth/register
 Request {
+    email,
+    username,
     firstName,
     lastName
     middleName,
@@ -20,7 +22,7 @@ Request {
 
 LOGIN AUTHENTICATION API
 
-POST
+POST - (Use accessToken and rememberToken as user token sessions for security)
 /auth/login
 Request {
     usernameOrEmail,
