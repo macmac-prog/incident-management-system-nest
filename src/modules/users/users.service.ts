@@ -22,27 +22,47 @@ export class UsersService {
     return bcrypt.hash(password, salt);
   }
 
-  async create(
-    createUserDto: CreateUserDto,
-    createUserDetailsDto: CreateUserDetailsDto,
-  ): Promise<any> {
-    return this.prisma.$transaction(async (prisma) => {
+  async createUserData(createUserDto: CreateUserDto): Promise<any> {
+    const user = await this.prisma.$transaction(async (prisma) => {
       const hashedPassword = await this.hashPassword(createUserDto.password);
 
-      const { confirmPassword, ...userData } = createUserDto;
+      const {
+        email,
+        firstName,
+        lastName,
+        middleName,
+        address,
+        phoneNumber,
+        ...userData
+      } = createUserDto;
 
       // Create the UserLogin record
       const userLogin = await prisma.userLogin.create({
         data: {
-          ...userData,
+          username: userData.username,
           password: hashedPassword,
         },
       });
 
-      // Create the UserDetail record associated with the UserLogin
+      const { username, password, rememberToken, confirmPassword, ...userDetailsData } =
+        createUserDto;
 
-      return { userLogin };
+      // Create the UserDetail record associated with the UserLogin
+      const userDetail = await prisma.userDetail.create({
+        data: {
+          ...userDetailsData,
+          user: {
+            connect: {
+              id: userLogin.id,
+            },
+          },
+        },
+      });
+
+      return { userLogin, userDetail };
     });
+
+    return user;
   }
 
   findById(id: number): Promise<any> {
