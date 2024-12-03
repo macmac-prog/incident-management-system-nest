@@ -26,40 +26,24 @@ export class UsersService {
     const user = await this.prisma.$transaction(async (prisma) => {
       const hashedPassword = await this.hashPassword(createUserDto.password);
 
-      const {
-        email,
-        firstName,
-        lastName,
-        middleName,
-        address,
-        phoneNumber,
-        ...userData
-      } = createUserDto;
+      
+      const { username, password, rememberToken, confirmPassword, ...userDetailsData } =
+        createUserDto;
 
       // Create the UserLogin record
       const userLogin = await prisma.userLogin.create({
         data: {
-          username: userData.username,
+          username: username,
           password: hashedPassword,
-        },
-      });
-
-      const { username, password, rememberToken, confirmPassword, ...userDetailsData } =
-        createUserDto;
-
-      // Create the UserDetail record associated with the UserLogin
-      const userDetail = await prisma.userDetail.create({
-        data: {
-          ...userDetailsData,
           user: {
-            connect: {
-              id: userLogin.id,
-            },
-          },
+            create: {
+              ...userDetailsData
+            }
+          }
         },
       });
 
-      return { userLogin, userDetail };
+      return userLogin;
     });
 
     return user;
