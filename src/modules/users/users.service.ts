@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/modules/prisma/prisma.service';
+import { PrismaService } from '../../modules/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CreateUserDetailsDto } from './dto/create-userDetails.dto';
 import * as bcrypt from 'bcrypt';
@@ -17,34 +17,31 @@ export class UsersService {
     });
   }
 
+  async hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
+  }
+
   async create(
     createUserDto: CreateUserDto,
     createUserDetailsDto: CreateUserDetailsDto,
   ): Promise<any> {
     return this.prisma.$transaction(async (prisma) => {
-      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+      const hashedPassword = await this.hashPassword(createUserDto.password);
+
+      const { confirmPassword, ...userData } = createUserDto;
 
       // Create the UserLogin record
       const userLogin = await prisma.userLogin.create({
         data: {
-          ...createUserDto,
+          ...userData,
           password: hashedPassword,
         },
       });
 
       // Create the UserDetail record associated with the UserLogin
-      const userDetail = await prisma.userDetail.create({
-        data: {
-          ...createUserDetailsDto,
-          user: {
-            connect: {
-              id: userLogin.id,
-            },
-          },
-        },
-      });
 
-      return { userLogin, userDetail };
+      return { userLogin };
     });
   }
 
@@ -71,14 +68,9 @@ export class UsersService {
   }
 
   findByEmail(email: string): Promise<any> {
-    return this.prisma.userLogin.findFirst({
+    return this.prisma.userDetail.findUnique({
       where: {
-        user: {
-          email: email,
-        },
-      },
-      include: {
-        user: true,
+        email: email,
       },
     });
   }

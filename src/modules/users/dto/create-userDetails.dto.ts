@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString, Validate } from "class-validator";
-import { IsUnique } from "src/common/unique-validator/is-email-unique.validator";
+import { IsUnique } from "../../../common/pipes/is-unique.validator";
 
 export class CreateUserDetailsDto {
     @IsString()
@@ -21,7 +21,7 @@ export class CreateUserDetailsDto {
     address?: string;
 
     @IsEmail()
-    @IsNotEmpty()
-    @Validate(IsUnique, ['UserDetail', 'email'], { message: 'Email already exists.' })
+    @IsNotEmpty({ message: 'Email is required' })
+    @Validate(IsUnique, ['UserDetail', 'email'], { message: 'Email is already exists.' })
     email: string;
 }
