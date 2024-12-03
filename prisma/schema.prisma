@@ -27,6 +27,13 @@ enum Status {
   CLOSED
 }
 
+enum TeamCategory {
+  NETWORK_TEAM
+  HARDWARE_TEAM
+  SECURITY_TEAM
+  INFRASTRUCTURE_TEAM
+}
+
 //DATABASE
 model UserLogin {
   id            Int              @id @default(autoincrement())
@@ -55,7 +62,7 @@ model UserDetail {
 
 model Team {
   id       Int         @id @default(autoincrement())
-  name     String      @unique
+  name     TeamCategory?
   users    UserLogin[]
   category Category[]
 }

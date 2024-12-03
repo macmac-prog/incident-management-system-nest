@@ -34,20 +34,20 @@ export class UsersService {
 
       const hashedPassword = await this.hashPassword(password);
 
-      // const userRole = await prisma.role.findFirst({
-      //   where: { name: UserRoles.USER },
-      // });
+      const userRole = await prisma.role.findFirst({
+        where: { name: UserRoles.USER },
+      });
 
       // Create the UserLogin and UserDetail record
       const userLogin = await prisma.userLogin.create({
         data: {
           username: username,
           password: hashedPassword,
-          // roles: {
-          //   connect: {
-          //     id: userRole.id,
-          //   },
-          // },
+          roles: {
+            connect: {
+              id: userRole.id,
+            },
+          },
           user: {
             create: {
               ...userDetailsData,
