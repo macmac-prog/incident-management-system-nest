@@ -13,6 +13,8 @@ export class UsersService {
     return this.prisma.userLogin.findMany({
       include: {
         user: true,
+        roles: true,
+        teams: true,
       },
     });
   }
@@ -70,6 +72,7 @@ export class UsersService {
       include: {
         user: true,
         roles: true,
+        teams: true,
       },
     });
   }
@@ -81,6 +84,8 @@ export class UsersService {
       },
       include: {
         user: true,
+        roles: true,
+        teams: true,
       },
     });
   }

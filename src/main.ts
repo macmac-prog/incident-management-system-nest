@@ -34,14 +34,14 @@ async function bootstrap() {
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  // app.enableCors({
-  //   origin: process.env.CLIENT_URL,
-  //   methods: '*',
-  //   credentials: true,
-  // });
+  app.enableCors({
+    origin: process.env.CLIENT_URL,
+    methods: '*',
+    credentials: true,
+  });
 
   app.setGlobalPrefix('api/v1');
 
-  await app.listen(3000, '0.0.0.0');
+  await app.listen(5004, '0.0.0.0');
 }
 bootstrap();
