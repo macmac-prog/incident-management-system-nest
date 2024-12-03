@@ -17,8 +17,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto, createUserDetailsDto: CreateUserDetailsDto) {
-    return this.usersService.create(createUserDto, createUserDetailsDto);
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.createUserData(createUserDto);
   }
 
   @Get()

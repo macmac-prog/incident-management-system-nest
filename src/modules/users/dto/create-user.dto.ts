@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, Validate } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, Validate } from 'class-validator';
 import { IsPasswordMatch } from '../../../common/pipes/confirm-password.validator';
 import { IsUnique } from '../../../common/pipes/is-unique.validator';
 
@@ -15,10 +15,33 @@ export class CreateUserDto {
   password: string;
 
   @IsPasswordMatch('password', { message: 'Passwords do not match' })
-  @IsNotEmpty({ message: 'Confirm Password is required' })
-  confirmPassword: string;
+  @IsString()
+  confirmPassword?: string;
 
   @IsString()
   @IsOptional()
   rememberToken?: string;
+
+  @IsString()
+  firstName: string;
+
+  @IsString()
+  @IsOptional()
+  middleName?: string;
+
+  @IsString()
+  lastName: string;
+
+  @IsString()
+  @IsOptional()
+  phoneNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  address?: string;
+
+  @IsEmail()
+  @IsNotEmpty({ message: 'Email is required' })
+  @Validate(IsUnique, ['UserDetail', 'email'], { message: 'Email is already exists.' })
+  email: string;
 }
