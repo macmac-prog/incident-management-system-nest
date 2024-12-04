@@ -11,6 +11,7 @@ import { IsUnique } from './common/pipes/is-unique.validator';
 import { CategoryModule } from './modules/category/category.module';
 import { IncidentReportsModule } from './modules/incident-reports/incident-reports.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { TeamsModule } from './modules/teams/teams.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
         limit: 5,
       },
     ]),
+    TeamsModule,
   ],
   controllers: [AppController],
   providers: [
