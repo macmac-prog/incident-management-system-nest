@@ -6,27 +6,52 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class CategoryService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createCategoryDto: CreateCategoryDto) {
-    this.prisma.category.create({
+  create(createCategoryDto: CreateCategoryDto, teamId: number) {
+    return this.prisma.category.create({
       data: {
         ...createCategoryDto,
+        teamId: teamId,
       },
     });
   }
 
   findAll() {
-    return `This action returns all category`;
+    return this.prisma.category.findMany({
+      include: {
+        team: true,
+        report: true,
+      },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} category`;
+    return this.prisma.category.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        team: true,
+      },
+    });
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  update(id: number, updateCategoryDto: UpdateCategoryDto, teamId: number) {
+    return this.prisma.category.update({
+      where: {
+        id,
+      },
+      data: {
+        ...updateCategoryDto,
+        teamId: teamId,
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  delete(id: number) {
+    return this.prisma.category.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
